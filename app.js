@@ -2,18 +2,25 @@ const connectDB = require("./db/connect");
 const express = require("express");
 const app = express();
 require('dotenv').config()
+const notFound = require('./middleware/notFound')
+const errorHandler = require('./middleware/error-handler')
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 //middleware
+app.use(express.static('./public'))
 app.use(express.json());
 //routes
 const tasks = require("./routes/task");
-
+//
 app.use("/api/v1/tasks", tasks);
-app.get("/", (req, res) => {
+app.use(errorHandler)
+app.use(notFound)
+
+
+/* app.get("/", (req, res) => {
   res.send("Hello world");
-});
+}); */
 
 ///api/v1/tasks  -get all tasks
 //post('api/v1/tasks')   -create all new tasks
